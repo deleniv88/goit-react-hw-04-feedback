@@ -4,6 +4,7 @@ import Notification from "./Notifications/Notification";
 import Section from "./Section/Section";
 import Statistics from "./Statistics/Statistics";
 
+
 class App extends Component {
   state = {
     good: 0,
@@ -11,7 +12,7 @@ class App extends Component {
     bad: 0
   };
 
-  handlerIncrementGood = (e) => {
+  handlerIncrement = (e) => {
     const id = e.target.id;
     console.log(id);
     if (id === 'good') {
@@ -41,27 +42,24 @@ class App extends Component {
     return percenatage;
   };
 
-
   render() {
     const title = 'Please leave feedback';
     const message = 'There is no feedback'
+
     return (
       <>
-
         <Section title={title}>
-          <FeedbackOptions onLeaveFeedback={this.handlerIncrementGood} />
+           <FeedbackOptions onLeaveFeedback={this.handlerIncrement}/>
+           <h2>Statistics</h2>
+            {!this.countTotalFeedback() > 0 ? <Notification message={message}/> :
+             <Statistics
+             good={this.state.good}
+             neutral={this.state.neutral}
+             bad={this.state.bad}
+             total={this.countTotalFeedback()}
+             positivePercentage={this.countPositiveFeedbackPercentage()} />
+            }
         </Section>
-
-        <h2>Statistics</h2>
-
-        <Notification message={message} />
-        <Statistics
-          good={this.state.good}
-          neutral={this.state.neutral}
-          bad={this.state.bad}
-          total={this.countTotalFeedback()}
-          positivePercentage={this.countPositiveFeedbackPercentage()} />
-
       </>
     );
   };
