@@ -4,7 +4,6 @@ import Notification from "./Notifications/Notification";
 import Section from "./Section/Section";
 import Statistics from "./Statistics/Statistics";
 
-
 class App extends Component {
   state = {
     good: 0,
@@ -12,24 +11,10 @@ class App extends Component {
     bad: 0
   };
 
-  handlerIncrement = (e) => {
-    const id = e.target.id;
-    console.log(id);
-    if (id === 'good') {
-      this.setState({
-        good: this.state.good + 1,
-      })
-    }
-    else if (id === 'neutral') {
-      this.setState({
-        neutral: this.state.neutral + 1
-      })
-    }
-    else if (id === 'bad') {
-      this.setState({
-        bad: this.state.bad + 1
-      })
-    }
+  handlerIncrement = option => {
+    this.setState(prevState => {
+      return { [option]: prevState[option] + 1 }
+    });
   };
 
   countTotalFeedback = () => {
@@ -44,23 +29,30 @@ class App extends Component {
 
   render() {
     const title = 'Please leave feedback';
-    const message = 'There is no feedback'
+    const statistics = 'Statistics';
+    const message = 'There is no feedback';
+    const options = Object.keys(this.state);
 
     return (
-      <>
+      <div>
         <Section title={title}>
-           <FeedbackOptions onLeaveFeedback={this.handlerIncrement}/>
-           <h2>Statistics</h2>
-            {!this.countTotalFeedback() > 0 ? <Notification message={message}/> :
-             <Statistics
-             good={this.state.good}
-             neutral={this.state.neutral}
-             bad={this.state.bad}
-             total={this.countTotalFeedback()}
-             positivePercentage={this.countPositiveFeedbackPercentage()} />
-            }
+          <FeedbackOptions options={options} onLeaveFeedback={this.handlerIncrement} />
         </Section>
-      </>
+
+        <Section title={statistics}>
+          {this.countTotalFeedback() ? (
+            <Statistics
+              good={this.state.good}
+              neutral={this.state.neutral}
+              bad={this.state.bad}
+              total={this.countTotalFeedback()}
+              positivePercentage={this.countPositiveFeedbackPercentage()}
+            />
+          ) : (
+            <Notification message={message} />
+          )}
+        </Section>
+      </div>
     );
   };
 };
