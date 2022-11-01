@@ -25,26 +25,22 @@ export default function App() {
       default:
         return;
     }
-
   };
 
-  const countTotalFeedback = () => good + neutral + bad;
-
+  const countTotalFeedback = () =>  good + neutral + bad;
+   
   const countPositiveFeedbackPercentage = () => ((good / countTotalFeedback()) * 100).toFixed(0) + '%';
 
-  const title = 'Please leave feedback';
-  const statistics = 'Statistics';
-  const message = 'There is no feedback';
   const options = Object.keys({ good, neutral, bad });
 
   return (
     <div>
-      <Section title={title}>
+      <Section title='Please leave feedback'>
         <FeedbackOptions options={options} onLeaveFeedback={handlerIncrement} />
       </Section>
 
-      <Section title={statistics}>
-        {countTotalFeedback ? (
+      <Section title='Statistics'>
+        {countTotalFeedback() ? (
           <Statistics
             good={good}
             neutral={neutral}
@@ -53,7 +49,7 @@ export default function App() {
             positivePercentage={countPositiveFeedbackPercentage()}
           />
         ) : (
-          <Notification message={message} />
+          <Notification message='There is no feedback' />
         )}
       </Section>
     </div>
